@@ -1,34 +1,39 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>    
+    <h1>{{ msg }}</h1>   
+    <number-input v-model="age"></number-input>
+    <md-button @click="post" class="md-primary">Post</md-button>
+    <span class="md-error red">{{$store.state.errors.age}}</span>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import numberInput from '@/components/numberInput'
 
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
   },
-  async created(){
-    const config = {
-      headers: {
-        Authorization: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoibWlndWVsIn0.XnBRt8Lo5aG0UjWWgPi683fgWi3yBNh4gZVh9YW-9Fg',
-      } 
+  data(){
+    return {
     }
-    const api = process.env.NODE_ENV === 'production' ? 'http://756d1119-c231-4419-aa2e-733226de1c62.clouding.host:8089/car' : 'http://localhost:8089/car'
-    const res = await axios.post(api, 
-      {
-      "name": "miguelito",
-      "contact": {
-        "email": "miguel.alarcos@gmail.com"
+  },
+  computed: {
+    age: {
+        get() {
+            return this.$store.state.form.age
+        },
+        set(value) {
+            this.$store.commit('setAge', value)
         }
-      },
-      config
-    )
-    console.log(res)
+    }
+  },
+  components: {numberInput},
+  methods: {
+    post(){
+      this.$store.dispatch('post')
+    }
   }
 }
 </script>
@@ -48,5 +53,8 @@ li {
 }
 a {
   color: #42b983;
+}
+.red{
+  color: red;
 }
 </style>
